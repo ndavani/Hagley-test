@@ -28,12 +28,16 @@ const WEATHER_API_KEY = "e23c0a18cd0744e940f5020207c57793";
 function sendScan(weather) {
   fetch(SCRIPT_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({
       exhibit: EXHIBIT_NAME,
       weather: weather
     })
-  });
+  })
+  .then(() => console.log("Scan sent"))
+  .catch(err => console.error("Scan failed", err));
 }
 
 function logScan() {
@@ -60,3 +64,4 @@ function logScan() {
 
 logScan();
 </script>
+
