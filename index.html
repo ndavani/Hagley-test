@@ -19,18 +19,12 @@ alert("QR script loaded");
 This exhibit highlights the historical use of rolling wheels in the Birkenhead area and their role in early industrial processes.
 </p>
 
-<!-- ===== BACKGROUND ANALYTICS SCRIPT (INVISIBLE TO VISITORS) ===== -->
 <script>
-/* =========================
-   CONFIG
-========================= */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzm0wgH5Tdlz8KEGJcXRE4jif9Rxn_Ma3Vf_Dn-RhwMbKAT1LnZvLIs0uM1gts01k6rIQ/exec";
 
-/* =========================
-   TEST POST (NO GEO, NO WEATHER)
-========================= */
 fetch(SCRIPT_URL, {
   method: "POST",
+  mode: "no-cors",
   headers: {
     "Content-Type": "application/json"
   },
@@ -38,16 +32,10 @@ fetch(SCRIPT_URL, {
     exhibit: "TEST EXHIBIT FROM GITHUB",
     weather: "TEST WEATHER"
   })
-})
-.then(() => {
-  alert("POST sent successfully");
-})
-.catch(err => {
-  alert("POST failed");
-  console.error(err);
 });
+
+// No alerts — browser cannot read response in no-cors
 </script>
 
 </body>
 </html>
-
