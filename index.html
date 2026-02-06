@@ -20,21 +20,62 @@ This exhibit highlights the historical use of rolling wheels in the Birkenhead a
 </p>
 
 <script>
+/* =========================
+   CONFIG
+========================= */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzm0wgH5Tdlz8KEGJcXRE4jif9Rxn_Ma3Vf_Dn-RhwMbKAT1LnZvLIs0uM1gts01k6rIQ/exec";
+const EXHIBIT_NAME = "Birkenhead Rolling Wheels";
+const WEATHER_API_KEY = "e23c0a18cd0744e940f5020207c57793";
 
-fetch(SCRIPT_URL, {
-  method: "POST",
-  mode: "no-cors",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    exhibit: "TEST EXHIBIT FROM GITHUB",
-    weather: "TEST WEATHER"
-  })
-});
+/* =========================
+   SEND SCAN
+========================= */
+function sendScan(weather) {
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      exhibit: EXHIBIT_NAME,
+      weather: weather
+    })
+  });
+}
 
-// No alerts — browser cannot read response in no-cors
+/* =========================
+   GET WEATHER
+========================= */
+function logScan() {
+  if (!navigator.geolocation) {
+    sendScan("Unknown");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
+      )
+        .then(res => res.json())
+        .then(data => {
+          const condition = data.weather?.[0]?.main || "Unknown";
+          sendScan(condition);
+        })
+        .catch(() => sendScan("Unavailable"));
+    },
+    () => sendScan("Permission Denied")
+  );
+}
+
+/* =========================
+   RUN ON LOAD
+========================= */
+logScan();
 </script>
 
 </body>
