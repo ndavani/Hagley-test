@@ -66,7 +66,7 @@ function logScan() {
           const condition = data.weather?.[0]?.main || "Unknown";
           const temp = Math.round(data.main?.temp);
 
-          const weatherString = `${data.weather[0].condition} (${temp}°F)`;
+          const weatherString = `${data.weather[0].description} (${temp}°F)`;
 
           sendScan(weatherString);
         })
