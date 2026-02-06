@@ -1,11 +1,56 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hagley QR Test</title>
-  </head>
-  <body>
-    <h1>Image Test</h1>
-    <img src="test.jpg" width="600">
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Hagley QR Test</title>
+</head>
+<body>
+
+<h1>Birkenhead Rolling Wheels</h1>
+
+<img src="test.jpg" width="600">
+
+<p id="weather">Loading weather...</p>
+
+<script>
+  const apiKey = "e23c0a18cd0744e940f5020207c57793";
+
+  function getWeather() {
+    if (!navigator.geolocation) {
+      document.getElementById("weather").innerText = "Location not supported.";
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            const condition = data.weather[0].main;
+            const temp = Math.round(data.main.temp);
+
+            document.getElementById("weather").innerText =
+              `Current Weather: ${condition}, ${temp}°F`;
+
+            // Later: send condition + exhibit name to Airtable
+          })
+          .catch(() => {
+            document.getElementById("weather").innerText = "Weather unavailable.";
+          });
+      },
+      () => {
+        document.getElementById("weather").innerText = "Location permission denied.";
+      }
+    );
+  }
+
+  getWeather();
+</script>
+
+</body>
 </html>
