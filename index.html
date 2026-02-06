@@ -2,55 +2,77 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hagley QR Test</title>
+  <title>Birkenhead Rolling Wheels – Hagley Museum</title>
 </head>
+
 <body>
 
 <h1>Birkenhead Rolling Wheels</h1>
 
-<img src="test.jpg" width="600">
+<img src="test.jpg" width="600" alt="Birkenhead Rolling Wheels">
 
-<p id="weather">Loading weather...</p>
+<p>
+This exhibit highlights the historical use of rolling wheels in the Birkenhead area and their role in early industrial processes.
+</p>
 
+<!-- ===== BACKGROUND ANALYTICS SCRIPT (INVISIBLE TO VISITORS) ===== -->
 <script>
-  const apiKey = "e23c0a18cd0744e940f5020207c57793";
+/* =========================
+   CONFIGURATION
+========================= */
+const EXHIBIT_NAME = "Birkenhead Rolling Wheels";
+const FORM_URL = "https://airtable.com/app8eYX3QqOqFLzjl/pag1YP6uWlkbXp13F/form";
+const WEATHER_API_KEY = "e23c0a18cd0744e940f5020207c57793";
 
-  function getWeather() {
-    if (!navigator.geolocation) {
-      document.getElementById("weather").innerText = "Location not supported.";
-      return;
-    }
+/* =========================
+   SEND DATA TO AIRTABLE
+========================= */
+function submitToAirtable(weatherCondition) {
+  const formData = new FormData();
+  formData.append("Exhibit Name", EXHIBIT_NAME);
+  formData.append("Weather", weatherCondition);
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
+  fetch(FORM_URL, {
+    method: "POST",
+    body: formData,
+    mode: "no-cors"
+  });
+}
 
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
-
-        fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            const condition = data.weather[0].main;
-            const temp = Math.round(data.main.temp);
-
-            document.getElementById("weather").innerText =
-              `Current Weather: ${condition}, ${temp}°F`;
-
-            // Later: send condition + exhibit name to Airtable
-          })
-          .catch(() => {
-            document.getElementById("weather").innerText = "Weather unavailable.";
-          });
-      },
-      () => {
-        document.getElementById("weather").innerText = "Location permission denied.";
-      }
-    );
+/* =========================
+   GET WEATHER + LOG SCAN
+========================= */
+function logScanWithWeather() {
+  if (!navigator.geolocation) {
+    submitToAirtable("Unknown");
+    return;
   }
 
-  getWeather();
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`
+      )
+        .then(response => response.json())
+        .then(data => {
+          const weather = data.weather[0].main;
+          submitToAirtable(weather);
+        })
+        .catch(() => submitToAirtable("Unavailable"));
+    },
+    () => submitToAirtable("Permission Denied")
+  );
+}
+
+/* =========================
+   RUN ON PAGE LOAD
+========================= */
+logScanWithWeather();
 </script>
+<!-- ===== END SCRIPT ===== -->
 
 </body>
 </html>
