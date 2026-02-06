@@ -66,7 +66,8 @@ function logScan() {
           const condition = data.weather?.[0]?.main || "Unknown";
           const temp = Math.round(data.main?.temp);
 
-          const weatherString = `${condition} (${temp}°F)`;
+          const weatherString = `${data.weather[0].condition} (${temp}°F)`;
+
           sendScan(weatherString);
         })
         .catch(() => sendScan("Weather unavailable"));
