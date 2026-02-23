@@ -22,51 +22,59 @@ This exhibit highlights the historical use of rolling wheels in the Birkenhead a
 <script>
 
 /* =========================
-   CONFIGURATION
+CONFIG
 ========================= */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzm0wgH5Tdlz8KEGJcXRE4jif9Rxn_Ma3Vf_Dn-RhwMbKAT1LnZvLIs0uM1gts01k6rIQ/exec";
 const EXHIBIT_NAME = "Birkenhead Rolling Wheels";
-const WEATHER_API_KEY = "e23c0a18cd0744e940f5020207c57793";
+const WEATHER_API_KEY = "YOUR_OPENWEATHER_KEY";
 
-/* =========================
-   SEND SCAN
-========================= */
-function sendScan(weatherType, temperature) {
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      exhibit: EXHIBIT_NAME,
-      weather: weatherType,
-      temperature: temperature
-    })
-  });
-}
-
-/* =========================
-   GET WEATHER (NO GEOLOCATION)
-========================= */
-
-// Hagley Museum coordinates
+/* Hagley fixed coordinates */
 const LAT = 39.7496;
 const LON = -75.6206;
 
-function logScan() {
 
-  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=imperial&appid=${WEATHER_API_KEY}`)
-    .then(r => r.json())
-    .then(data => {
+/* =========================
+SEND SCAN
+========================= */
+function sendScan(weatherType, temperature){
 
-      const weatherType = data.weather?.[0]?.description || "Unknown";
-      const temperature = Math.round(data.main?.temp || 0);
+  const payload = {
+    exhibit: EXHIBIT_NAME,
+    weather: weatherType || "Unknown",
+    temperature: Number(temperature) || 0
+  };
 
-      sendScan(weatherType, temperature);
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify(payload)
+  });
 
-    })
-    .catch(() => sendScan("Unavailable", 0));
 }
 
+
+/* =========================
+GET WEATHER
+========================= */
+function logScan(){
+
+  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=imperial&appid=${WEATHER_API_KEY}`)
+  .then(r=>r.json())
+  .then(data=>{
+
+    const weatherType = data.weather?.[0]?.description || "Unknown";
+    const temperature = Math.round(data.main?.temp || 0);
+
+    sendScan(weatherType, temperature);
+
+  })
+  .catch(()=> sendScan("Unavailable",0));
+
+}
+
+
+/* RUN */
 logScan();
 
 </script>
