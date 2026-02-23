@@ -39,7 +39,9 @@ const HAGLEY_LON = -75.6206;
 ========================= */
 function sendScan(weatherType, temperature) {
   fetch(SCRIPT_URL, {
+    method: "POST",
     mode: "cors",
+    
     headers: {
       "Content-Type": "application/json"
     },
