@@ -29,22 +29,13 @@ const EXHIBIT_NAME = "Birkenhead Rolling Wheels";
 const WEATHER_API_KEY = "e23c0a18cd0744e940f5020207c57793";
 
 /* =========================
-   HAGLEY MUSEUM FIXED LOCATION
-========================= */
-const HAGLEY_LAT = 39.7496;
-const HAGLEY_LON = -75.6206;
-
-/* =========================
-   SEND SCAN TO SERVER
+   SEND SCAN
 ========================= */
 function sendScan(weatherType, temperature) {
   fetch(SCRIPT_URL, {
     method: "POST",
-    mode: "cors",
-    
-    headers: {
-      "Content-Type": "application/json"
-    },
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       exhibit: EXHIBIT_NAME,
       weather: weatherType,
@@ -54,14 +45,17 @@ function sendScan(weatherType, temperature) {
 }
 
 /* =========================
-   GET WEATHER FOR HAGLEY
+   GET WEATHER (NO GEOLOCATION)
 ========================= */
+
+// Hagley Museum coordinates
+const LAT = 39.7496;
+const LON = -75.6206;
+
 function logScan() {
 
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${HAGLEY_LAT}&lon=${HAGLEY_LON}&units=imperial&appid=${WEATHER_API_KEY}`
-  )
-    .then(response => response.json())
+  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=imperial&appid=${WEATHER_API_KEY}`)
+    .then(r => r.json())
     .then(data => {
 
       const weatherType = data.weather?.[0]?.description || "Unknown";
@@ -73,9 +67,6 @@ function logScan() {
     .catch(() => sendScan("Unavailable", 0));
 }
 
-/* =========================
-   RUN ON PAGE LOAD
-========================= */
 logScan();
 
 </script>
