@@ -1,23 +1,87 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Birkenhead Rolling Wheels – Hagley Museum</title>
-</head>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f4f1ec;
+    color: #333;
+  }
 
-<body>
+  header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+  }
 
-<h1>Birkenhead Rolling Wheels</h1>
+  header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
 
-<img src="test.jpg" width="600" alt="Birkenhead Rolling Wheels">
+  header p {
+    margin-top: 10px;
+    font-size: 1rem;
+    opacity: 0.85;
+  }
 
-<script>
-alert("QR script loaded");
-</script>
+  .container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
 
-<p>
-This exhibit highlights the historical use of rolling wheels in the Birkenhead area and their role in early industrial processes.
-</p>
+  .exhibit-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 25px;
+  }
+
+  .description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    background-color: #2c3e50;
+    color: white;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    header h1 {
+      font-size: 1.8rem;
+    }
+
+    .container {
+      margin: 20px;
+    }
+  }
+</style>
+
+<header>
+  <h1>Birkenhead Rolling Wheels</h1>
+  <p>Hagley Museum Interactive Exhibit</p>
+</header>
+
+<div class="container">
+  <img src="test.jpg" alt="Birkenhead Rolling Wheels" class="exhibit-image">
+
+  <p class="description">
+    This exhibit highlights the historical use of rolling wheels in the Birkenhead area
+    and their role in early industrial processes. Visitors can explore how mechanical
+    innovation helped transform manufacturing during the Industrial Revolution.
+  </p>
+</div>
+
+<footer>
+  © Hagley Museum | QR Visitor Interaction System
+</footer>
 
 <script>
 
