@@ -84,7 +84,8 @@ function logScan(){
       throw new Error("Weather response missing fields");
     }
 
-    const temperature = Math.round(data.main.temp);
+    // ✅ ONLY CHANGE: add °F here
+    const temperature = Math.round(data.main.temp) + "°F";
     const weatherType = data.weather[0].description;
 
     sendScan(weatherType, temperature);
@@ -95,7 +96,7 @@ function logScan(){
     console.error("Weather error:", error);
 
     // still log scan but mark weather error clearly
-    sendScan("WEATHER_ERROR", -1);
+    sendScan("WEATHER_ERROR", "-1°F");
 
   });
 
