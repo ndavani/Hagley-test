@@ -26,23 +26,25 @@ CONFIG
 ========================= */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzm0wgH5Tdlz8KEGJcXRE4jif9Rxn_Ma3Vf_Dn-RhwMbKAT1LnZvLIs0uM1gts01k6rIQ/exec";
 const EXHIBIT_NAME = "Birkenhead Rolling Wheels";
-const WEATHER_API_KEY = "YOUR_OPENWEATHER_KEY";
+const WEATHER_API_KEY = "PUT_YOUR_OPENWEATHER_KEY_HERE";
 
-/* Hagley fixed coordinates */
+/* Hagley Museum fixed coordinates */
 const LAT = 39.7496;
 const LON = -75.6206;
 
 
 /* =========================
-SEND SCAN
+SEND SCAN TO APPS SCRIPT
 ========================= */
 function sendScan(weatherType, temperature){
 
   const payload = {
     exhibit: EXHIBIT_NAME,
-    weather: weatherType || "Unknown",
-    temperature: Number(temperature) || 0
+    weather: weatherType,
+    temperature: temperature
   };
+
+  console.log("Sending:", payload);
 
   fetch(SCRIPT_URL,{
     method:"POST",
@@ -55,26 +57,54 @@ function sendScan(weatherType, temperature){
 
 
 /* =========================
-GET WEATHER
+GET WEATHER FROM OPENWEATHER
 ========================= */
 function logScan(){
 
-  fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=imperial&appid=${WEATHER_API_KEY}`)
-  .then(r=>r.json())
-  .then(data=>{
+  const weatherURL =
+  `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&units=imperial&appid=${WEATHER_API_KEY}`;
 
-    const weatherType = data.weather?.[0]?.description || "Unknown";
-    const temperature = Math.round(data.main?.temp || 0);
+  console.log("Requesting weather:", weatherURL);
+
+  fetch(weatherURL)
+  .then(response => {
+
+    if(!response.ok){
+      throw new Error("Weather request failed with status " + response.status);
+    }
+
+    return response.json();
+  })
+  .then(data => {
+
+    console.log("Weather data:", data);
+
+    // Validate structure
+    if(!data.main || !data.weather || !data.weather.length){
+      throw new Error("Weather response missing fields");
+    }
+
+    const temperature = Math.round(data.main.temp);
+    const weatherType = data.weather[0].description;
 
     sendScan(weatherType, temperature);
 
   })
-  .catch(()=> sendScan("Unavailable",0));
+  .catch(error => {
+
+    console.error("Weather error:", error);
+
+    // still log scan but mark weather error clearly
+    sendScan("WEATHER_ERROR", -1);
+
+  });
 
 }
 
 
-/* RUN */
+/* =========================
+RUN WHEN PAGE LOADS
+========================= */
 logScan();
 
 </script>
