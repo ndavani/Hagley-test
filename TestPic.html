@@ -1,38 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Hagley AR View</title>
+  <meta charset="UTF-8">
+  <title>Birkenhead Rolling Wheels – Hagley Museum</title>
 
-  <!-- A-Frame -->
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
 
-  <!-- AR.js -->
-  <script src="https://cdn.jsdelivr.net/npm/ar.js@3.3.2/aframe/build/aframe-ar.js"></script>
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Background environment */
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(#cfe8ff, #ffffff);
+    }
+
+    /* Main exhibit image */
+    .mill-image {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 85vh; /* controls "life-size" feel */
+      max-width: 95vw;
+      object-fit: contain;
+    }
+
+    /* Overlay text */
+    .overlay {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: white;
+      background: rgba(0,0,0,0.6);
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
+<body>
 
-<a-scene embedded arjs>
+<div class="container">
 
-  <!-- Marker (Hiro is default test marker) -->
-  <a-marker preset="hiro">
+  <div class="background"></div>
 
-    <!-- Replace with your mill image -->
-    <a-image 
-      src="Pic.png" 
-      position="0 0.5 0" 
-      rotation="-90 0 0"
-      width="2"
-      height="1">
-    </a-image>
+  <!-- YOUR IMAGE -->
+  <img src="Pic.png" class="mill-image">
 
-  </a-marker>
+  <div class="overlay">
+    Birkenhead Rolling Wheels (Historical View)
+  </div>
 
-  <!-- Camera -->
-  <a-entity camera></a-entity>
-
-</a-scene>
+</div>
 
 </body>
 </html>
