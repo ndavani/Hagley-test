@@ -1,0 +1,9 @@
+div class="container">
+  <img src="test.jpg" alt="Birkenhead Rolling Wheels" class="exhibit-image">
+
+  <p class="description">
+    This exhibit highlights the historical use of rolling wheels in the Birkenhead area
+    and their role in early industrial processes. Visitors can explore how mechanical
+    innovation helped transform manufacturing during the Industrial Revolution.
+  </p>
+</div>
