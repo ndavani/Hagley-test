@@ -13,17 +13,24 @@
       --powder:    #deeaf4;
       --light-bg:  #eaf3f9;
       --white:     #ffffff;
-      --navy-dim:  rgba(30,58,95,0.15);
-      --navy-mid:  rgba(30,58,95,0.55);
     }
     html, body {
       width: 100%; height: 100%;
-      background: var(--navy);
+      background: #000;
       color: var(--white);
       font-family: "Source Sans 3", sans-serif;
       font-weight: 300;
       overflow: hidden;
       touch-action: none;
+    }
+
+    /* CAMERA FEED — sits behind everything */
+    #camera-feed {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      display: none;
     }
 
     /* INTRO */
@@ -36,12 +43,10 @@
       transition: opacity 0.7s ease, visibility 0.7s ease;
     }
     #intro.hidden { opacity: 0; visibility: hidden; }
-
     .intro-rule {
       width: 3px; height: 52px;
       background: linear-gradient(to bottom, transparent, var(--steel), transparent);
-      margin-bottom: 2rem;
-      border-radius: 2px;
+      margin-bottom: 2rem; border-radius: 2px;
     }
     .intro-label {
       font-size: 10px; letter-spacing: 0.28em;
@@ -61,6 +66,12 @@
       margin-bottom: 3rem; line-height: 1.7;
       max-width: 280px;
     }
+    .intro-divider {
+      width: 40px; height: 2px;
+      background: var(--steel);
+      margin: 1.5rem 0 2rem;
+      border-radius: 1px;
+    }
     .distance-group { width: 100%; max-width: 300px; margin-bottom: 2.5rem; }
     .distance-label {
       font-size: 10px; letter-spacing: 0.22em;
@@ -77,11 +88,7 @@
       font-family: "Source Sans 3", sans-serif;
     }
     .pill:hover { border-color: var(--steel); color: var(--navy); background: var(--powder); }
-    .pill.active {
-      border-color: var(--navy);
-      background: var(--navy);
-      color: var(--white);
-    }
+    .pill.active { border-color: var(--navy); background: var(--navy); color: var(--white); }
     .view-btn {
       display: flex; align-items: center; gap: 10px;
       padding: 14px 36px;
@@ -94,19 +101,17 @@
     }
     .view-btn:hover { background: var(--steel); border-color: var(--steel); }
     .view-btn svg { width: 14px; height: 14px; }
-    .intro-divider {
-      width: 40px; height: 2px;
-      background: var(--steel);
-      margin: 1.5rem 0 2rem;
-      border-radius: 1px;
-    }
 
-    /* VIEWER */
+    /* VIEWER — transparent so camera shows through */
     #viewer {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      background: var(--navy); overflow: hidden;
+      background: transparent;
+      overflow: hidden;
+      z-index: 1;
     }
+
+    /* Mill image — black pixels become transparent via screen blend */
     #exhibit-img {
       display: block;
       max-width: 100vw; max-height: 100vh;
@@ -114,13 +119,26 @@
       object-fit: contain;
       transition: transform 0.5s ease;
       transform-origin: center center;
+      mix-blend-mode: screen;
+      z-index: 2;
+      position: relative;
+    }
+
+    /* Camera denied warning */
+    #camera-denied {
+      display: none;
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+      background: rgba(30,58,95,0.9); color: var(--powder);
+      font-size: 11px; letter-spacing: 0.08em; text-align: center;
+      padding: 10px 20px; border-radius: 4px; z-index: 20;
+      max-width: 260px; line-height: 1.6;
     }
 
     /* HUD */
     #hud {
       position: fixed; bottom: 0; left: 0; right: 0; padding: 20px 24px;
       display: flex; align-items: center; justify-content: space-between;
-      background: linear-gradient(to top, rgba(20,40,70,0.95) 0%, transparent 100%);
+      background: linear-gradient(to top, rgba(10,20,40,0.9) 0%, transparent 100%);
       transition: opacity 0.4s; z-index: 10;
     }
     #hud.hidden { opacity: 0; pointer-events: none; }
@@ -157,7 +175,7 @@
       position: fixed; top: 0; left: 0; right: 0;
       padding: 12px 20px;
       display: flex; align-items: center; gap: 10px;
-      background: linear-gradient(to bottom, rgba(20,40,70,0.85) 0%, transparent 100%);
+      background: linear-gradient(to bottom, rgba(10,20,40,0.8) 0%, transparent 100%);
       transition: opacity 0.4s; z-index: 10;
       pointer-events: none;
     }
@@ -179,12 +197,15 @@
 </head>
 <body>
 
+<!-- Live camera feed plays behind everything -->
+<video id="camera-feed" autoplay playsinline muted></video>
+
 <div id="intro">
   <div class="intro-rule"></div>
   <div class="intro-label">Hagley Museum &amp; Library</div>
   <div class="intro-title">The Birkenhead<br>Mill</div>
   <div class="intro-divider"></div>
-  <p class="intro-sub">Hold your phone up toward the exhibit and select how far you are standing.</p>
+  <p class="intro-sub">Hold your phone up toward the exhibit. The mill will appear over what you see around you.</p>
 
   <div class="distance-group">
     <span class="distance-label">How far are you standing?</span>
@@ -205,10 +226,18 @@
 
 <div id="viewer">
   <!--
-    Replace "your-exhibit-image.jpg" with your image filename.
-    Place the image in the same folder as this index.html.
+    TWO OPTIONS:
+    Option A — Image in same folder as index.html (recommended for GitHub Pages):
+      Replace "your-exhibit-image.jpg" with your actual filename e.g. "birkenhead-mill.jpg"
+
+    Option B — Image embedded in this file (no separate image file needed):
+      Replace the src value with the base64 string from the downloaded index.html
   -->
-  <img id="exhibit-img" src="Untitled design (6).png" alt="Birkenhead Mill grinding mechanism" />
+  <img id="exhibit-img" src="your-exhibit-image.jpg" alt="Birkenhead Mill grinding mechanism" />
+</div>
+
+<div id="camera-denied">
+  Camera access was denied. The mill image will show on a dark background instead.
 </div>
 
 <div id="hud-top">
@@ -231,11 +260,46 @@
 <div id="tap-hint">Tap screen to show controls</div>
 
 <script>
-  const SCALES = { 5: 1.3, 8: 1.2 };
+  // Adjust these values to control zoom level
+  // 1.0 = fits screen naturally, higher = more zoomed in
+  const SCALES = { 5: 1.15, 8: 1.0 };
+
   let viewingDistFt = 5;
   let hudVisible = true;
   let hudTimer = null;
 
+  // ── CAMERA PASSTHROUGH ────────────────────────────────────────────────────
+  async function startCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "environment", // uses rear camera on phones
+          width:  { ideal: window.screen.width },
+          height: { ideal: window.screen.height }
+        },
+        audio: false
+      });
+      const feed = document.getElementById("camera-feed");
+      feed.srcObject = stream;
+      feed.style.display = "block";
+    } catch (err) {
+      // Camera denied or unavailable — falls back to black background gracefully
+      const warning = document.getElementById("camera-denied");
+      warning.style.display = "block";
+      setTimeout(() => { warning.style.display = "none"; }, 4000);
+    }
+  }
+
+  function stopCamera() {
+    const feed = document.getElementById("camera-feed");
+    if (feed.srcObject) {
+      feed.srcObject.getTracks().forEach(t => t.stop());
+      feed.srcObject = null;
+      feed.style.display = "none";
+    }
+  }
+
+  // ── SCALING ───────────────────────────────────────────────────────────────
   function applyScale(ft) {
     document.getElementById("exhibit-img").style.transform = "scale(" + SCALES[ft] + ")";
   }
@@ -251,17 +315,21 @@
     applyScale(ft);
   }
 
+  // ── VIEWER TRANSITIONS ────────────────────────────────────────────────────
   function enterViewer() {
     applyScale(viewingDistFt);
     document.getElementById("intro").classList.add("hidden");
+    startCamera(); // request camera access when visitor taps View Exhibit
     showHud();
     setTimeout(() => document.getElementById("tap-hint").classList.add("gone"), 3000);
   }
 
   function backToIntro() {
+    stopCamera(); // stop camera when going back to save battery
     document.getElementById("intro").classList.remove("hidden");
   }
 
+  // ── HUD ───────────────────────────────────────────────────────────────────
   function showHud() {
     hudVisible = true;
     document.getElementById("hud").classList.remove("hidden");
