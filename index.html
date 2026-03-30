@@ -250,7 +250,8 @@
     const payload = {
       exhibit: EXHIBIT_NAME,
       weather: weatherType,
-      temperature: temperature
+      temperature: temperature,
+      apiKey: "hagley-mill-2026"
     };
     console.log("Sending:", payload);
     fetch(SCRIPT_URL, {
