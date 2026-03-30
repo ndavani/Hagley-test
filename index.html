@@ -109,7 +109,7 @@
       max-width: 100vw; max-height: 100vh;
       width: auto; height: auto;
       object-fit: contain;
-      transition: transform 0.5s ease;
+      transition: transform 0.1s ease;
       transform-origin: center center;
       mix-blend-mode: screen;
       z-index: 2;
@@ -150,6 +150,8 @@
       background: rgba(222,234,244,0.15);
       color: var(--white);
     }
+    .hud-zoom { display: flex; gap: 8px; align-items: center; }
+    .hud-zoom .hud-pill { padding: 6px 14px; font-size: 16px; line-height: 1; }
     .hud-back {
       font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
       color: rgba(222,234,244,0.5); cursor: pointer;
@@ -227,6 +229,10 @@
       <button class="hud-pill active" data-ft="5" onclick="selectDist(5, this, true)">5 ft</button>
       <button class="hud-pill"        data-ft="8" onclick="selectDist(8, this, true)">8 ft</button>
     </div>
+  </div>
+  <div class="hud-zoom">
+    <button class="hud-pill" onclick="adjustZoom(-0.15)">−</button>
+    <button class="hud-pill" onclick="adjustZoom(0.15)">+</button>
   </div>
   <button class="hud-back" onclick="backToIntro()">← Back</button>
 </div>
