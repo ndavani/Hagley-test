@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+  <!-- CHANGE: Update page title to match your exhibit name -->
   <title>Birkenhead Rolling Wheels — Exhibit Viewer</title>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet" />
   <style>
@@ -189,8 +191,13 @@
 <div id="intro">
   <div class="intro-rule"></div>
   <div class="intro-label">Hagley Museum &amp; Library</div>
+
+  <!-- CHANGE: Main exhibit title shown large on the intro screen
+               Use <br> to split onto two lines if needed -->
   <div class="intro-title">The Birkenhead<br>Rolling Wheels</div>
   <div class="intro-divider"></div>
+
+   <!-- CHANGE: Short description shown below the title on the intro screen -->
   <p class="intro-sub">Hold your phone up toward the exhibit. The wheel will appear over what you see around you.</p>
   <div class="distance-group">
     <span class="distance-label">How far are you standing?</span>
@@ -209,16 +216,21 @@
 </div>
 
 <div id="viewer">
+   <!-- CHANGE: src should match your image filename exactly (case sensitive)
+               The image file must be in the same folder as this index.html
+               Best results with images that have a black background -->
   <img id="exhibit-img" src="birkenhead_pic.png" alt="Birkenhead Rolling Wheel" />
 </div>
 
 <div id="camera-denied">
+  <!-- CHANGE: Update this message to reference your exhibit name if desired -->
   Camera access was denied. The wheel image will show on a dark background instead.
 </div>
 
 <div id="hud-top">
   <span class="hud-top-label">Hagley Museum &amp; Library</span>
   <div class="hud-top-dot"></div>
+  <!-- CHANGE: Update exhibit name This will appear as a small strip at the top of the screen during viewing -->
   <span class="hud-top-label">Birkenhead Wheel</span>
 </div>
 
@@ -226,6 +238,7 @@
   <div class="hud-dist">
     <span class="hud-dist-label">Distance</span>
     <div class="hud-dist-pills">
+      <!-- CHANGE: Distance if needed -->
       <button class="hud-pill active" data-ft="5" onclick="selectDist(5, this, true)">5 ft</button>
       <button class="hud-pill"        data-ft="8" onclick="selectDist(8, this, true)">8 ft</button>
     </div>
@@ -244,6 +257,7 @@
      CONFIG
   ========================= */
   const SCRIPT_URL      = "https://script.google.com/macros/s/AKfycbzm0wgH5Tdlz8KEGJcXRE4jif9Rxn_Ma3Vf_Dn-RhwMbKAT1LnZvLIs0uM1gts01k6rIQ/exec";
+  // CHANGE: This is what appears in the "Exhibit Name" column in Airtable — make it unique per exhibit
   const EXHIBIT_NAME    = "Birkenhead Rolling Wheels";
   const WEATHER_API_KEY = "e23c0a18cd0744e940f5020207c57793";
   const LAT = 39.7496;
@@ -293,6 +307,11 @@
 
   /* =========================
      AR VIEWER
+  ========================= */
+  /* =========================
+     CHANGE: ZOOM LEVELS
+     Adjust these if the image looks too small or too large at each distance
+     1.0 = fits the screen naturally, higher = more zoomed in, lower = more zoomed out
   ========================= */
   const SCALES = { 5: 1.15, 8: 1.0 };
   let viewingDistFt = 5;
