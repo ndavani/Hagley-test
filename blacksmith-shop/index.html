@@ -212,17 +212,12 @@
   <!-- CHANGE: Short description shown below the title on the intro screen -->
   <p class="intro-sub">Hold your phone sideways toward the exhibit. The workers will appear over what you see around you.</p>
 
-  <!-- Safari fullscreen tip — shows only on iPhone/iPad Safari -->
-  <p id="ios-hint" style="display:none; font-size:11px; letter-spacing:0.06em; color:var(--steel); text-align:center; max-width:260px; line-height:1.7; margin-bottom:1rem;">
-    For best results on iPhone: tap the share button ↑ then "Add to Home Screen", then open from there for a fullscreen view.
-  </p>
-
   <div class="distance-group">
     <span class="distance-label">How far are you standing?</span>
     <div class="distance-pills">
       <!-- CHANGE: Add or remove distance buttons here if needed -->
       <button class="pill active" data-ft="5" onclick="selectDist(5, this)">5 ft</button>
-      <button class="pill"        data-ft="8" onclick="selectDist(8, this)">8 ft</button>
+      <button class="pill"        data-ft="8" onclick="selectDist(8, this)">10 ft</button>
     </div>
   </div>
 
@@ -499,10 +494,6 @@
   document.addEventListener("touchend", e => {
     if (e.touches.length < 2) initialPinchDist = null;
   });
-    // Show the iOS hint only on Safari iPhone
-  if (/iphone|ipad/i.test(navigator.userAgent) && !navigator.standalone) {
-    document.getElementById("ios-hint").style.display = "block";
-  }
 </script>
 </body>
 </html>
