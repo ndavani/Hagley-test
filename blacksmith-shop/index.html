@@ -73,7 +73,11 @@
       margin: 1.5rem 0 2rem;
       border-radius: 1px;
     }
-    .distance-group { width: 100%; max-width: 300px; margin-bottom: 2.5rem; }
+    /* CHANGE: To HIDE the distance buttons — keep display: none (current setting)
+           To SHOW the distance buttons — change display: none to display: block
+           The buttons still work in the background even when hidden,
+           defaulting to whichever pill has class="active" on page load */
+    .distance-group { width: 100%; max-width: 300px; margin-bottom: 2.5rem; display: none; }
     .distance-label {
       font-size: 10px; letter-spacing: 0.22em;
       text-transform: uppercase; color: var(--steel);
@@ -216,8 +220,8 @@
     <span class="distance-label">How far are you standing?</span>
     <div class="distance-pills">
       <!-- CHANGE: Add or remove distance buttons here if needed -->
-      <button class="pill active" data-ft="5" onclick="selectDist(5, this)">5 ft</button>
-      <button class="pill"        data-ft="10" onclick="selectDist(10, this)">10 ft</button>
+      <button class="pill active" data-ft="15" onclick="selectDist(15, this)">15 ft</button>
+      <button class="pill"        data-ft="20" onclick="selectDist(20, this)">20 ft</button>
     </div>
   </div>
 
@@ -297,15 +301,15 @@
      1.0 = fits the screen naturally, higher = more zoomed in, lower = more zoomed out
   ========================= */
   const SCALES = {
-    5: 1.15,  // zoom level when visitor selects 5 ft
-    8: 1.0    // zoom level when visitor selects 8 ft
+    15: 1.15,  // zoom level when visitor selects 5 ft
+    20: 1.0    // zoom level when visitor selects 8 ft
   };
 
   /* =========================
      NO CHANGES NEEDED BELOW THIS LINE
   ========================= */
 
-  let viewingDistFt = 5;
+  let viewingDistFt = 15;
   let hudVisible = true;
   let hudTimer = null;
 
