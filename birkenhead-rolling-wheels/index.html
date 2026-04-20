@@ -202,8 +202,8 @@
   <div class="distance-group">
     <span class="distance-label">How far are you standing?</span>
     <div class="distance-pills">
-      <button class="pill active" data-ft="5" onclick="selectDist(5, this)">5 ft</button>
-      <button class="pill"        data-ft="8" onclick="selectDist(8, this)">8 ft</button>
+      <button class="pill active" data-ft="9" onclick="selectDist(9, this)">9 ft</button>
+      <button class="pill"        data-ft="12" onclick="selectDist(12, this)">12 ft</button>
     </div>
   </div>
   <button class="view-btn" onclick="enterViewer()">
@@ -239,8 +239,8 @@
     <span class="hud-dist-label">Distance</span>
     <div class="hud-dist-pills">
       <!-- CHANGE: Distance if needed -->
-      <button class="hud-pill active" data-ft="5" onclick="selectDist(5, this, true)">5 ft</button>
-      <button class="hud-pill"        data-ft="8" onclick="selectDist(8, this, true)">8 ft</button>
+      <button class="hud-pill active" data-ft="9" onclick="selectDist(9, this, true)">9 ft</button>
+      <button class="hud-pill"        data-ft="12" onclick="selectDist(12, this, true)">12 ft</button>
     </div>
   </div>
   <div class="hud-zoom">
@@ -313,8 +313,8 @@
      Adjust these if the image looks too small or too large at each distance
      1.0 = fits the screen naturally, higher = more zoomed in, lower = more zoomed out
   ========================= */
-  const SCALES = { 5: 1.15, 8: 1.0 };
-  let viewingDistFt = 5;
+  const SCALES = { 9: 0.85, 12: 0.65 };
+  let viewingDistFt = 9;
   let hudVisible = true;
   let hudTimer = null;
 
